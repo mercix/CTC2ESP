@@ -1,0 +1,101 @@
+esphome:
+  name: ctc2esp
+  platform: esp32
+  board: nodemcu-32s
+  includes:
+    - dp.h
+    - hp.h
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Ctc2EspFallback"
+    password: "EmqktqPXEQbU"
+
+captive_portal:
+
+# Enable logging
+logger:
+  level: ERROR
+  #Change level to DEBUG for debugging
+  baud_rate: 0
+  
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+
+uart:
+  - id: uart_bus_dp
+    rx_pin: GPIO16
+    baud_rate: 2400
+    stop_bits: 1
+    parity: NONE
+    #debug:  Uncomment for UART debug from Display
+      #direction: RX
+      #dummy_receiver: true
+
+  - id: uart_bus_hp
+    rx_pin: GPIO03
+    baud_rate: 2400
+    stop_bits: 1
+    parity: NONE
+    #debug:  Uncomment for UART debug from HeatPump
+      #direction: RX
+      #dummy_receiver: true
+
+binary_sensor:
+  - platform: custom
+    lambda: |-
+      auto custom_sensor_dp = new DP(id(uart_bus_dp));
+      App.register_component(custom_sensor_dp);
+      return {custom_sensor_dp->compressor, 
+              custom_sensor_dp->fan_low, 
+              custom_sensor_dp->fan_high, 
+              custom_sensor_dp->circulation_pump_hp, 
+              custom_sensor_dp->supplementary_heating, 
+              custom_sensor_dp->alarm_led};
+    binary_sensors:
+      - name: "Compressor"
+      - name: "Fan Low"
+      - name: "Fan High"
+      - name: "Circulation Pump HP"
+      - name: "Supplementary heating"
+        filters:
+        - invert:
+      - name: "Alarm"
+sensor:
+  - platform: custom
+    lambda: |-
+      auto custom_sensor_hp = new HP(id(uart_bus_hp));
+      App.register_component(custom_sensor_hp);
+      return {custom_sensor_hp->temperature_accumulator, 
+              custom_sensor_hp->temperature_outdoor_ecologic, 
+              custom_sensor_hp->temperature_before_vp, 
+              custom_sensor_hp->temperature_heat_gas, 
+              custom_sensor_hp->temperature_outdoor_vp, 
+              custom_sensor_hp->temperature_after_vp};
+    sensors:
+      - name: "Temperature Accumulator"
+        unit_of_measurement: "°C"
+        accuracy_decimals: 0
+      - name: "Temperature Outdoor EcoLogic"
+        unit_of_measurement: "°C"
+        accuracy_decimals: 0
+      - name: "Temperature Before HP"
+        unit_of_measurement: "°C"
+        accuracy_decimals: 0
+      - name: "Temperature Heat Gas"
+        unit_of_measurement: "°C"
+        accuracy_decimals: 0
+      - name: "Temperature Outdoor HP"
+        unit_of_measurement: "°C"
+        accuracy_decimals: 0
+      - name: "Temperature After HP"
+        unit_of_measurement: "°C"
+        accuracy_decimals: 0
