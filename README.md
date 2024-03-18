@@ -28,7 +28,7 @@ The wiring used is as follows(Parallell wires for each signal) :
 
 
 **Data from RB to DP consist of 22 hex bytes per block and looks as follows:**
-022C2980002F808094940D800000082A2F0000080020
+02:27:29:80:00:26:80:80:94:94:5E:80:00:00:08:28:2D:00:00:01:00:78
 
 The bytes represent as follows: 
 #= Not avalible on EcoLogic
