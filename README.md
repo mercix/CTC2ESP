@@ -57,8 +57,8 @@ The bytes represent as follows: <br/>
 Example data string: FA:90:44:90:44:00:00:00:80:7A <br/>
 
 1 Always 0xFA <br/>
-2 Bitmapped data with information of active relays in EcoLogic and Ecoair no.1 <br/>
-3 Bitmapped data with information of active relays in EcoLogic and Ecoair no.2 <br/>
+2 Bitmaped data with information of active relays in EcoLogic and Ecoair no.1 <br/>
+3 Bitmaped data with information of active relays in EcoLogic and Ecoair no.2 <br/>
 4 Same as byte 2<br/>
 5 Same as byte 3 <br/>
 6 and 7 and 8 Always 0x00 <br/>
@@ -68,7 +68,9 @@ Example data string: FA:90:44:90:44:00:00:00:80:7A <br/>
 
 **Bitmap of Byte 2&4 [DP to RB]** <br/>
 The bitmap is as follows: <br/>
+
 *Not tested* <br/>
+
 0 Compressor <br/>
 1 Fan Low <br/>
 *2 Unkonwn* <br/>
@@ -80,7 +82,9 @@ The bitmap is as follows: <br/>
 
 **Bitmap of Byte 3&5 [DP to RB]** <br/>
 The bitmap is as follows: <br/>
+
 *Not tested* <br/>
+
 0 Alarm LED <br/>
 1 Circulation pump <br/>
 2 Unknown <br/>
