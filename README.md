@@ -67,7 +67,8 @@ Example data string: FA:90:44:90:44:00:00:00:80:7A <br/>
 
 
 **Bitmap of Byte 2&4 [DP to RB]** <br/>
-*Untested* <br/>
+The bitmap is as follows: <br/>
+*Not tested* <br/>
 0 Compressor <br/>
 1 Fan Low <br/>
 *2 Unkonwn* <br/>
@@ -78,7 +79,8 @@ Example data string: FA:90:44:90:44:00:00:00:80:7A <br/>
 *7 Shunt closed* <br/>
 
 **Bitmap of Byte 3&5 [DP to RB]** <br/>
-*Untested* <br/>
+The bitmap is as follows: <br/>
+*Not tested* <br/>
 0 Alarm LED <br/>
 1 Circulation pump <br/>
 2 Unknown <br/>
