@@ -66,8 +66,8 @@ Example data string: FA:90:44:90:44:00:00:00:80:7A <br/>
 10 Always 0x7A (with exception for boot 0xFA) <br/>
 
 
-**Bitmap of Byte 2&4 [DP to RB]**
-*Untested*
+**Bitmap of Byte 2&4 [DP to RB]** <br/>
+*Untested* <br/>
 0 Compressor <br/>
 1 Fan Low <br/>
 *2 Unkonwn* <br/>
@@ -77,8 +77,8 @@ Example data string: FA:90:44:90:44:00:00:00:80:7A <br/>
 6 Unknown <br/>
 *7 Shunt closed* <br/>
 
-**Bitmap of Byte 3&5 [DP to RB]**
-*Untested*
+**Bitmap of Byte 3&5 [DP to RB]** <br/>
+*Untested* <br/>
 0 Alarm LED <br/>
 1 Circulation pump <br/>
 2 Unknown <br/>
