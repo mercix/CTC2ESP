@@ -27,7 +27,7 @@ The wiring used is as follows(Parallell wires for each signal) :
 
 # Wiring
 PinOut for NodeMCU ESP32 and SparkFun Transceiver Breakout - MAX3232
-![alt text](https://github.com/mercix/CTC2ESP/blob/main/PinOut.png)?raw=true)
+![alt text](https://github.com/mercix/CTC2ESP/blob/main/PinOut.png?raw=true)
 
 
 
