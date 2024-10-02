@@ -12,7 +12,7 @@ The code is adjusted to work with CTC Ecologic V3 control unit which is conncect
 # Hardware
 You need:
 1. ESP32 based board, as you need two harware UARTs. (ESP8266 got only one harware UART Rx) - *I used nodemcu ESP32 board.*
-2. Two UART <-> RS232 adapters.- *I used SparkFun Transceiver Breakout - MAX3232*
+2. Two UART <-> RS232 adapters.- *I used ONE SparkFun Transceiver Breakout - MAX3232*
 3. Ethernet cable to "slice up".
 
 # Communication between relayboard and displayboard
@@ -24,6 +24,10 @@ The wiring used is as follows(Parallell wires for each signal) :
 3-4   GND <br/>
 5-6 RX (Data from DP to RB) <br/>
 7-8 TX (Data from RB to DP) <br/>
+
+# Wiring
+PinOut for NodeMCU ESP32 and SparkFun Transceiver Breakout - MAX3232
+![alt text]([https://github.com/[username]/[reponame]/blob/[branch]/image.jpg](https://github.com/mercix/CTC2ESP/blob/main/PinOut.png)?raw=true)
 
 
 
