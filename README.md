@@ -15,6 +15,10 @@ You need:
 2. Two UART <-> RS232 adapters.- *I used ONE SparkFun Transceiver Breakout - MAX3232*
 3. Ethernet cable to "slice up".
 
+# Wiring
+PinOut for NodeMCU ESP32 and SparkFun Transceiver Breakout - MAX3232
+![alt text](https://github.com/mercix/CTC2ESP/blob/main/PinOut.png?raw=true)
+
 # Communication between relayboard and displayboard
 The microcontroller with firmware is mounted on the displayboard(DP) and it is communicating with the microcontroller relayboard(RB) via standard ethernet(RJ45) cable using 2400bit/s RS232 8N1 protocol.
 
@@ -24,12 +28,6 @@ The wiring used is as follows(Parallell wires for each signal) :
 3-4   GND <br/>
 5-6 RX (Data from DP to RB) <br/>
 7-8 TX (Data from RB to DP) <br/>
-
-# Wiring
-PinOut for NodeMCU ESP32 and SparkFun Transceiver Breakout - MAX3232
-![alt text](https://github.com/mercix/CTC2ESP/blob/main/PinOut.png?raw=true)
-
-
 
 **Data from RB to DP consist of 22 hex bytes per block and looks as follows:** <br/>
 Example data string: 02:27:29:80:00:26:80:80:94:94:5E:80:00:00:08:28:2D:00:00:01:00:78 <br/>
