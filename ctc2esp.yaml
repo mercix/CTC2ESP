@@ -3,8 +3,8 @@ esphome:
   platform: esp32
   board: nodemcu-32s
   #includes:
-    - dp.h
-    - hp.h
+  #  - dp.h
+  #  - hp.h
 
   external_components:
   - source: github://mercix/CTC2ESP@external
