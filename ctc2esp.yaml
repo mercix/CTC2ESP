@@ -2,9 +2,18 @@ esphome:
   name: ctc2esp
   platform: esp32
   board: nodemcu-32s
-  includes:
+  #includes:
     - dp.h
     - hp.h
+
+  external_components:
+  - source: github://mercix/CTC2ESP@external
+  dp:
+  some_option: value
+  hp:
+  some_option: value
+
+
 
 wifi:
   ssid: !secret wifi_ssid
@@ -50,7 +59,7 @@ uart:
       #dummy_receiver: true
 
 binary_sensor:
-  - platform: custom
+  - platform: external
     lambda: |-
       auto custom_sensor_dp = new DP(id(uart_bus_dp));
       App.register_component(custom_sensor_dp);
@@ -70,7 +79,7 @@ binary_sensor:
         - invert:
       - name: "Alarm"
 sensor:
-  - platform: custom
+  - platform: external
     lambda: |-
       auto custom_sensor_hp = new HP(id(uart_bus_hp));
       App.register_component(custom_sensor_hp);
