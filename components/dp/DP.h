@@ -16,6 +16,8 @@ public:
   binary_sensor::BinarySensor *supplementary_heating = new binary_sensor::BinarySensor();
   binary_sensor::BinarySensor *alarm_led = new binary_sensor::BinarySensor();
 
+  static const char *const TAG;
+
   void setup() override {
     // Setup code if needed
   }
@@ -29,6 +31,18 @@ public:
       readData();
     }
     publishSensorStates();
+  }
+
+  // Required to register the component in ESPHome
+  static const std::vector<std::string> get_binary_sensor_names() {
+    return {
+      "Compressor",
+      "Fan Low",
+      "Fan High",
+      "Circulation Pump HP",
+      "Supplementary Heating",
+      "Alarm"
+    };
   }
 
 private:
@@ -104,5 +118,8 @@ private:
     // Implement sensor state publishing logic (if needed)
   }
 };
+
+// Register the component with the name "dp"
+const std::vector<std::string> DP::get_binary_sensor_names() {};
 
 #endif  // DP_H
