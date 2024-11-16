@@ -8,7 +8,6 @@ class DP : public PollingComponent, public UARTDevice {
 public:
   DP(UARTComponent *parent) : PollingComponent(5000), UARTDevice(parent) {}
 
-  // Binary sensor instances
   binary_sensor::BinarySensor *compressor = new binary_sensor::BinarySensor();
   binary_sensor::BinarySensor *fan_low = new binary_sensor::BinarySensor();
   binary_sensor::BinarySensor *fan_high = new binary_sensor::BinarySensor();
@@ -19,11 +18,11 @@ public:
   static const char *const TAG;
 
   void setup() override {
-    // Setup code if needed
+    // Additional setup if needed
   }
 
   void loop() override {
-    // No need to implement loop here
+    // No need for any logic here
   }
 
   void update() override {
@@ -33,16 +32,22 @@ public:
     publishSensorStates();
   }
 
-  // Required to register the component in ESPHome
-  static const std::vector<std::string> get_binary_sensor_names() {
-    return {
-      "Compressor",
-      "Fan Low",
-      "Fan High",
-      "Circulation Pump HP",
-      "Supplementary Heating",
-      "Alarm"
-    };
+  // Static method to configure the component schema
+  static void setup(const std::string &id) {
+    // Configure the component with any required parameters
+    ESP_LOGD(TAG, "Initializing DP component with id: %s", id.c_str());
+  }
+
+  // Register configuration schema for the component
+  static const char *get_schema() {
+    return R"(
+      type: object
+      properties:
+        id:
+          name: 'ID'
+          description: 'Identifier for this component'
+          type: string
+    )";
   }
 
 private:
@@ -71,7 +76,7 @@ private:
       }
     }
 
-    *hexPtr = '\0';  // Null terminate the string
+    *hexPtr = '\0';
 
     if (validStartByte && valid6thByte && (hexPtr - hexString) > 0) {
       ESP_LOGD("CustomSensor", "Received data: %s", hexString);
@@ -97,7 +102,6 @@ private:
       b_byte.push_back(bits);
     }
 
-    // Update sensor states
     compressor->publish_state(b_byte[0][0] ? 1 : 0);
     fan_low->publish_state(b_byte[0][1] ? 1 : 0);
     fan_high->publish_state(b_byte[0][3] ? 1 : 0);
@@ -115,11 +119,11 @@ private:
   }
 
   void publishSensorStates() {
-    // Implement sensor state publishing logic (if needed)
+    // Add logic to publish the sensor states if needed
   }
 };
 
-// Register the component with the name "dp"
-const std::vector<std::string> DP::get_binary_sensor_names() {};
+// Register the custom sensor with ESPHome
+const char *const DP::TAG = "dp";
 
 #endif  // DP_H
