@@ -6,6 +6,7 @@ namespace dp_custom {
 
 static const char *TAG = "dp_custom";  // Logging tag
 
+// Constructor definition
 DP::DP(uart::UARTComponent *parent) : PollingComponent(5000), UARTDevice(parent) {
   compressor = new binary_sensor::BinarySensor();
   fan_low = new binary_sensor::BinarySensor();
@@ -15,10 +16,12 @@ DP::DP(uart::UARTComponent *parent) : PollingComponent(5000), UARTDevice(parent)
   alarm_led = new binary_sensor::BinarySensor();
 }
 
+// Setup function
 void DP::setup() {
   // Additional setup if needed
 }
 
+// Update function
 void DP::update() {
   if (this->available()) {
     readData();
@@ -26,6 +29,7 @@ void DP::update() {
   publishSensorStates();
 }
 
+// Read data from UART
 void DP::readData() {
   const size_t maxBytes = 10;
   char hexString[(2 * maxBytes) + 1];
@@ -65,6 +69,7 @@ void DP::readData() {
   }
 }
 
+// Process the received hex string
 void DP::processHexString(char *hexString) {
   std::vector<uint8_t> h_byte;
   std::vector<std::vector<bool>> b_byte;
@@ -84,6 +89,7 @@ void DP::processHexString(char *hexString) {
   alarm_led->publish_state(b_byte[1][0]);
 }
 
+// Convert the value to bits
 std::vector<bool> DP::getBits(uint8_t value) {
   std::vector<bool> bits(8);
   for (int i = 7; i >= 0; --i) {
@@ -92,6 +98,7 @@ std::vector<bool> DP::getBits(uint8_t value) {
   return bits;
 }
 
+// Publish the sensor states
 void DP::publishSensorStates() {
   // Placeholder for additional state publishing logic if needed
 }
