@@ -1,18 +1,20 @@
 #pragma once
 
-#include "esphome.h"
-#include <sstream>
+#include "esphome/core/component.h"
+#include "esphome/components/uart/uart.h"
+#include "esphome/components/binary_sensor/binary_sensor.h"
+#include "esphome/core/log.h"
 
-class DP : public PollingComponent, public UARTDevice {
+class DP : public esphome::PollingComponent, public esphome::uart::UARTDevice {
 public:
-  DP(UARTComponent *parent);
+  DP(esphome::uart::UARTComponent *parent);
 
-  binary_sensor::BinarySensor *compressor;
-  binary_sensor::BinarySensor *fan_low;
-  binary_sensor::BinarySensor *fan_high;
-  binary_sensor::BinarySensor *circulation_pump_hp;
-  binary_sensor::BinarySensor *supplementary_heating;
-  binary_sensor::BinarySensor *alarm_led;
+  esphome::binary_sensor::BinarySensor *compressor;
+  esphome::binary_sensor::BinarySensor *fan_low;
+  esphome::binary_sensor::BinarySensor *fan_high;
+  esphome::binary_sensor::BinarySensor *circulation_pump_hp;
+  esphome::binary_sensor::BinarySensor *supplementary_heating;
+  esphome::binary_sensor::BinarySensor *alarm_led;
 
   void setup() override;
   void update() override;
