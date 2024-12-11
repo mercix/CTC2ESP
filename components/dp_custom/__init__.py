@@ -19,10 +19,10 @@ CONFIG_SCHEMA = cv.Schema(
 
 # Generate code from the configuration and register the component
 async def to_code(config):
-    # Register the uart component first
+    # Resolve the uart_id to the actual UARTComponent
     uart_component = await uart.register_uart_device(config["uart_id"], config)
     
-    # Create the DP component, passing the uart component
+    # Create the DP component, passing the resolved uart component
     var = cg.new_Pvariable(config[CONF_ID], uart_component)
     
     # Register the DP component
