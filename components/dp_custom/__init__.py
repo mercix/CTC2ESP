@@ -11,17 +11,18 @@ DP = dp_ns.class_("DP", cg.PollingComponent, uart.UARTDevice)
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(DP),
+        # Ensure the uart_id is passed properly to the DP component
         cv.Required("uart_id"): cv.use_id(uart.UARTComponent),
     }
 ).extend(uart.UART_DEVICE_SCHEMA)
 
 # Generate code from the configuration and register the component
 async def to_code(config):
-    # The line that was causing the issue: Register the uart_id as a UARTComponent
+    # Step 1: Register the uart_id and resolve it to an actual UARTComponent object
     uart_component = await uart.register_uart_device(config["uart_id"], config)
 
-    # Create the DP component and pass the resolved uart_component
+    # Step 2: Pass the resolved uart_component to the DP class
     var = cg.new_Pvariable(config[CONF_ID], uart_component)
 
-    # Register the DP component
+    # Step 3: Register the DP component
     await cg.register_component(var, config)
