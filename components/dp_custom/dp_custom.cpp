@@ -1,12 +1,12 @@
 #include "dp_custom.h"
 
-DP::DP(UARTComponent *parent) : PollingComponent(5000), UARTDevice(parent) {
-  compressor = new binary_sensor::BinarySensor();
-  fan_low = new binary_sensor::BinarySensor();
-  fan_high = new binary_sensor::BinarySensor();
-  circulation_pump_hp = new binary_sensor::BinarySensor();
-  supplementary_heating = new binary_sensor::BinarySensor();
-  alarm_led = new binary_sensor::BinarySensor();
+DP::DP(esphome::uart::UARTComponent *parent) : PollingComponent(5000), UARTDevice(parent) {
+  compressor = new esphome::binary_sensor::BinarySensor();
+  fan_low = new esphome::binary_sensor::BinarySensor();
+  fan_high = new esphome::binary_sensor::BinarySensor();
+  circulation_pump_hp = new esphome::binary_sensor::BinarySensor();
+  supplementary_heating = new esphome::binary_sensor::BinarySensor();
+  alarm_led = new esphome::binary_sensor::BinarySensor();
 }
 
 void DP::setup() {
@@ -14,7 +14,7 @@ void DP::setup() {
 }
 
 void DP::update() {
-  if (available()) {
+  if (this->available()) {
     readData();
   }
   publishSensorStates();
@@ -29,9 +29,9 @@ void DP::readData() {
 
   ESP_LOGD("CustomSensor", "Reading data from UART...");
 
-  while ((hexPtr - hexString) < (2 * maxBytes) && available()) {
+  while ((hexPtr - hexString) < (2 * maxBytes) && this->available()) {
     uint8_t byte;
-    if (read_byte(&byte)) {
+    if (this->read_byte(&byte)) {
       if ((hexPtr - hexString) == 0 && byte == 0xFA) {
         validStartByte = true;
         ESP_LOGD("CustomSensor", "Start byte detected: 0xFA");
