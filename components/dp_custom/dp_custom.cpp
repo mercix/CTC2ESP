@@ -1,12 +1,18 @@
 #include "dp_custom.h"
+#include "esphome/core/log.h"
 
-DP::DP(esphome::uart::UARTComponent *parent) : PollingComponent(5000), UARTDevice(parent) {
-  compressor = new esphome::binary_sensor::BinarySensor();
-  fan_low = new esphome::binary_sensor::BinarySensor();
-  fan_high = new esphome::binary_sensor::BinarySensor();
-  circulation_pump_hp = new esphome::binary_sensor::BinarySensor();
-  supplementary_heating = new esphome::binary_sensor::BinarySensor();
-  alarm_led = new esphome::binary_sensor::BinarySensor();
+namespace esphome {
+namespace dp_custom {
+
+static const char *TAG = "dp_custom";  // Logging tag
+
+DP::DP(uart::UARTComponent *parent) : PollingComponent(5000), UARTDevice(parent) {
+  compressor = new binary_sensor::BinarySensor();
+  fan_low = new binary_sensor::BinarySensor();
+  fan_high = new binary_sensor::BinarySensor();
+  circulation_pump_hp = new binary_sensor::BinarySensor();
+  supplementary_heating = new binary_sensor::BinarySensor();
+  alarm_led = new binary_sensor::BinarySensor();
 }
 
 void DP::setup() {
@@ -23,22 +29,22 @@ void DP::update() {
 void DP::readData() {
   const size_t maxBytes = 10;
   char hexString[(2 * maxBytes) + 1];
-  char* hexPtr = hexString;
+  char *hexPtr = hexString;
   bool validStartByte = false;
   bool valid6thByte = false;
 
-  ESP_LOGD("CustomSensor", "Reading data from UART...");
+  ESP_LOGD(TAG, "Reading data from UART...");
 
   while ((hexPtr - hexString) < (2 * maxBytes) && this->available()) {
     uint8_t byte;
     if (this->read_byte(&byte)) {
       if ((hexPtr - hexString) == 0 && byte == 0xFA) {
         validStartByte = true;
-        ESP_LOGD("CustomSensor", "Start byte detected: 0xFA");
+        ESP_LOGD(TAG, "Start byte detected: 0xFA");
       }
       if (validStartByte) {
         hexPtr += snprintf(hexPtr, 3, "%02X", byte);
-        ESP_LOGD("CustomSensor", "Received byte: %02X", byte);
+        ESP_LOGD(TAG, "Received byte: %02X", byte);
       }
     }
   }
@@ -52,11 +58,14 @@ void DP::readData() {
   }
 
   if (validStartByte && valid6thByte) {
+    ESP_LOGD(TAG, "Received valid UART string: %s", hexString);
     processHexString(hexString);
+  } else {
+    ESP_LOGD(TAG, "Invalid or incomplete data received.");
   }
 }
 
-void DP::processHexString(char* hexString) {
+void DP::processHexString(char *hexString) {
   std::vector<uint8_t> h_byte;
   std::vector<std::vector<bool>> b_byte;
 
@@ -64,6 +73,8 @@ void DP::processHexString(char* hexString) {
     h_byte.push_back(static_cast<uint8_t>(std::stoi(std::string(hexString + x, 2), nullptr, 16)));
     b_byte.push_back(getBits(h_byte.back()));
   }
+
+  ESP_LOGD(TAG, "Publishing sensor states...");
 
   compressor->publish_state(b_byte[0][0]);
   fan_low->publish_state(b_byte[0][1]);
@@ -82,5 +93,8 @@ std::vector<bool> DP::getBits(uint8_t value) {
 }
 
 void DP::publishSensorStates() {
-  // Additional logic if necessary
+  // Placeholder for additional state publishing logic if needed
 }
+
+}  // namespace dp_custom
+}  // namespace esphome
