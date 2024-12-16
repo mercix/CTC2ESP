@@ -2,7 +2,6 @@ import esphome.codegen as cg
 import esphome.components.binary_sensor as binary_sensor
 import esphome.components.uart as uart  # Import uart for UARTDevice
 import esphome.config_validation as cv
-from esphome import automation
 from esphome.const import CONF_ID, CONF_UART_ID
 
 DEPENDENCIES = ['uart']
@@ -20,7 +19,7 @@ def to_code(config):
     uart_component = yield cg.get_variable(config[CONF_UART_ID])
     var = cg.new_Pvariable(config[CONF_ID], uart_component)
     yield cg.register_component(var, config)
-    yield uart.register_uart_device(var, config)  # Corrected registration
+    yield uart.register_uart_device(var, uart_component)  # Correct UART registration
 
     # Define and attach binary sensors
     sensors = {
@@ -33,5 +32,6 @@ def to_code(config):
     }
 
     for attr_name, sensor_name in sensors.items():
-        sens = yield binary_sensor.new_binary_sensor(name=sensor_name)
+        sens = binary_sensor.BinarySensor.new()
+        cg.add(sens.set_name(sensor_name))
         cg.add(getattr(var, attr_name), sens)
