@@ -1,5 +1,8 @@
-#include "esphome.h"
-#include <sstream>
+#include "esphome.h" // This is crucial, includes core ESPHome functionality
+#include "esphome/components/uart/uart.h"
+#include "esphome/components/binary_sensor/binary_sensor.h"
+#include "esphome/core/component.h" // For PollingComponent
+#include "esphome/core/log.h"
 
 class DP : public PollingComponent, public UARTDevice {
 public:
