@@ -1,26 +1,33 @@
-#pragma once
-
 #include "esphome.h"
-#include <vector>
+#include <sstream>
 
 class DP : public PollingComponent, public UARTDevice {
 public:
-  DP(UARTComponent *parent);
+  DP(UARTComponent *parent) : PollingComponent(5000), UARTDevice(parent) {}
+  
+  binary_sensor::BinarySensor *compressor = new binary_sensor::BinarySensor();
+  binary_sensor::BinarySensor *fan_low = new binary_sensor::BinarySensor();
+  binary_sensor::BinarySensor *fan_high = new binary_sensor::BinarySensor();
+  binary_sensor::BinarySensor *circulation_pump_hp = new binary_sensor::BinarySensor();
+  binary_sensor::BinarySensor *supplementary_heating = new binary_sensor::BinarySensor();
+  binary_sensor::BinarySensor *alarm_led = new binary_sensor::BinarySensor();
 
-  binary_sensor::BinarySensor *compressor;
-  binary_sensor::BinarySensor *fan_low;
-  binary_sensor::BinarySensor *fan_high;
-  binary_sensor::BinarySensor *circulation_pump_hp;
-  binary_sensor::BinarySensor *supplementary_heating;
-  binary_sensor::BinarySensor *alarm_led;
+  void setup() override {
+    // Additional setup if needed
+  }
 
-  void setup() override;
-  void loop() override;
-  void update() override;
+  void update() override {
+    if (available()) {
+      readData();
+    }
+    publishSensorStates();
+  }
 
-private:
-  void readData();
-  void processHexString(char* hexString);
-  std::vector<bool> getBits(uint8_t value);
-  void publishSensorStates();
+  void readData() {
+    // UART reading logic
+  }
+
+  void publishSensorStates() {
+    // Publish sensor states
+  }
 };
