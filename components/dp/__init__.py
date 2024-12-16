@@ -20,8 +20,8 @@ def to_code(config):
     uart_component = yield cg.get_variable(config[CONF_UART_ID])
     var = cg.new_Pvariable(config[CONF_ID], uart_component)
     yield cg.register_component(var, config)
-    yield cg.register_uart_device(var, config)
-    
+    yield uart.register_uart_device(var, config)  # Corrected registration
+
     # Define and attach binary sensors
     sensors = {
         "compressor": "Compressor",
