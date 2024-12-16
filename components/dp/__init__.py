@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import uart
+from esphome.components import uart, binary_sensor  # Import binary_sensor
 from esphome.const import CONF_ID
 
 DEPENDENCIES = ["uart"]
@@ -35,6 +35,6 @@ async def to_code(config):
     }
 
     for attr_name, sensor_name in sensors.items():
-        sens = binary_sensor.BinarySensor.new()
+        sens = binary_sensor.BinarySensor.new()  # Create the binary sensor
         cg.add(sens.set_name(sensor_name))
         cg.add(getattr(var, attr_name), sens)
