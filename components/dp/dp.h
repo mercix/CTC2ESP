@@ -1,5 +1,5 @@
 #include "esphome.h"
-#include "esphome/components/uart/uart.h"
+#include <sstream>
 
 class DP : public PollingComponent, public UARTDevice {
 public:
