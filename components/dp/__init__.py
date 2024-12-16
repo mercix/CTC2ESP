@@ -1,20 +1,36 @@
 import esphome.codegen as cg
-import esphome.components.uart as uart
-from esphome.components import binary_sensor
-from esphome.const import CONF_ID
+import esphome.components.binary_sensor as binary_sensor
+import esphome.config_validation as cv
+from esphome import automation
+from esphome.const import CONF_ID, CONF_UART_ID
 
-CODEOWNERS = ["@your_github_username"]
+DEPENDENCIES = ['uart']
 
-dp_ns = cg.esphome_ns.namespace("dp")
-DP = dp_ns.class_("DP", cg.PollingComponent, uart.UARTDevice)
+# Define the DP class
+dp_ns = cg.esphome_ns.namespace('dp')
+DP = dp_ns.class_('DP', cg.PollingComponent, cg.UARTDevice)
 
-CONFIG_SCHEMA = (
-    binary_sensor.binary_sensor_schema()
-    .extend(uart.UART_DEVICE_SCHEMA)
-    .extend({cg.required(CONF_ID): cg.declare_id(DP)})
-)
+CONFIG_SCHEMA = cv.Schema({
+    cv.GenerateID(): cv.declare_id(DP),
+    cv.Required(CONF_UART_ID): cv.use_id(cg.UARTComponent),
+}).extend(cv.polling_component_schema('5s'))
 
-async def to_code(config):
-    var = cg.new_Pvariable(config[CONF_ID])
-    await cg.register_component(var, config)
-    await uart.register_uart_device(var, config)
+def to_code(config):
+    uart = yield cg.get_variable(config[CONF_UART_ID])
+    var = cg.new_Pvariable(config[CONF_ID], uart)
+    yield cg.register_component(var, config)
+    yield cg.register_uart_device(var, config)
+    
+    # Define and attach binary sensors
+    sensors = {
+        "compressor": "Compressor",
+        "fan_low": "Fan Low",
+        "fan_high": "Fan High",
+        "circulation_pump_hp": "Circulation Pump HP",
+        "supplementary_heating": "Supplementary Heating",
+        "alarm_led": "Alarm",
+    }
+
+    for attr_name, sensor_name in sensors.items():
+        sens = yield binary_sensor.new_binary_sensor(name=sensor_name)
+        cg.add(getattr(var, attr_name), sens)
