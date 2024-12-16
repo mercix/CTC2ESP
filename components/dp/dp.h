@@ -1,14 +1,12 @@
 #include "esphome.h"
-#include "esphome/components/uart/uart.h"  // Include UART for UARTDevice
-
-// The binary_sensor is handled automatically via the YAML and doesn't need to be explicitly included
-// #include "esphome/components/binary_sensor/binary_sensor.h"  // Remove this line
+#include "esphome/components/uart/uart.h"
+#include "esphome/components/binary_sensor/binary_sensor.h"
 
 class DP : public PollingComponent, public UARTDevice {
 public:
   DP(UARTComponent *parent) : PollingComponent(5000), UARTDevice(parent) {}
 
-  // Declare binary sensors (without the need to include binary_sensor.h directly)
+  // Declare binary sensors
   binary_sensor::BinarySensor *compressor = new binary_sensor::BinarySensor();
   binary_sensor::BinarySensor *fan_low = new binary_sensor::BinarySensor();
   binary_sensor::BinarySensor *fan_high = new binary_sensor::BinarySensor();
@@ -17,7 +15,7 @@ public:
   binary_sensor::BinarySensor *alarm_led = new binary_sensor::BinarySensor();
 
   void setup() override {
-    // Initialize anything that needs setup here
+    // Initial setup, if needed
   }
 
   void loop() override {
