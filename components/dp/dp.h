@@ -1,6 +1,5 @@
 #include "esphome.h"
 #include "esphome/components/uart/uart.h"
-#include "esphome/components/binary_sensor/binary_sensor.h"
 
 class DP : public PollingComponent, public UARTDevice {
 public:
