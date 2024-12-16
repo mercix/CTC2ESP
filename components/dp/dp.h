@@ -1,12 +1,11 @@
 #include "esphome.h"
-#include "esphome/components/binary_sensor/binary_sensor.h"  // Include binary sensor
-#include "esphome/components/uart/uart.h"  // Include UART
+#include "esphome/components/uart/uart.h"  // Include UART for UARTDevice
 
 class DP : public PollingComponent, public UARTDevice {
 public:
   DP(UARTComponent *parent) : PollingComponent(5000), UARTDevice(parent) {}
 
-  // Declare binary sensors
+  // Declare binary sensors (no need for #include binary_sensor.h)
   binary_sensor::BinarySensor *compressor = new binary_sensor::BinarySensor();
   binary_sensor::BinarySensor *fan_low = new binary_sensor::BinarySensor();
   binary_sensor::BinarySensor *fan_high = new binary_sensor::BinarySensor();
@@ -15,11 +14,11 @@ public:
   binary_sensor::BinarySensor *alarm_led = new binary_sensor::BinarySensor();
 
   void setup() override {
-    // Initialize sensors or perform any setup logic here
+    // Initialize anything that needs setup here
   }
 
   void update() override {
-    // This function is periodically called (every 5000ms)
+    // This function runs periodically (every 5000ms in this case)
     if (available()) {
       readData();
     }
