@@ -8,7 +8,7 @@ DEPENDENCIES = ['uart']
 
 # Define the DP class
 dp_ns = cg.esphome_ns.namespace('dp')
-DP = dp_ns.class_('DP', cg.PollingComponent, uart.UARTDevice)  # Use uart.UARTDevice
+DP = dp_ns.class_('DP', cg.PollingComponent, uart.UARTDevice)
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(DP),
@@ -19,7 +19,7 @@ def to_code(config):
     uart_component = yield cg.get_variable(config[CONF_UART_ID])
     var = cg.new_Pvariable(config[CONF_ID], uart_component)
     yield cg.register_component(var, config)
-    yield uart.register_uart_device(var, uart_component)  # Correct UART registration
+    yield uart.register_uart_device(var, uart_component)
 
     # Define and attach binary sensors
     sensors = {
