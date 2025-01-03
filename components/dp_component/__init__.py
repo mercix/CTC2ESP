@@ -1,15 +1,15 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import uart, binary_sensor
-from esphome.const import CONF_ID, CONF_UART_ID, CONF_NAME
+from esphome.const import CONF_ID, CONF_UART_ID
 
 DEPENDENCIES = ["uart"]
 
-# Namespace and component definition
+# Namespace and class definition
 dp_ns = cg.esphome_ns.namespace("dp_component")
 DpComponent = dp_ns.class_("DpComponent", cg.PollingComponent, uart.UARTDevice)
 
-# Configuration keys
+# Define configuration options
 CONF_COMPRESSOR = "compressor"
 CONF_FAN_LOW = "fan_low"
 CONF_FAN_HIGH = "fan_high"
@@ -17,13 +17,13 @@ CONF_CIRCULATION_PUMP_HP = "circulation_pump_hp"
 CONF_SUPPLEMENTARY_HEATING = "supplementary_heating"
 CONF_ALARM_LED = "alarm_led"
 
-# Main component schema
+# Component schema for `dp_component:`
 DP_COMPONENT_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(DpComponent),
     cv.Required(CONF_UART_ID): cv.use_id(uart.UARTComponent),
-})
+}).extend(cv.COMPONENT_SCHEMA)
 
-# Binary sensor platform schema
+# Binary sensor schema for `platform: dp_component`
 BINARY_SENSOR_PLATFORM_SCHEMA = cv.Schema({
     cv.GenerateID(CONF_ID): cv.use_id(DpComponent),
     cv.Optional(CONF_COMPRESSOR): binary_sensor.binary_sensor_schema(),
@@ -34,19 +34,27 @@ BINARY_SENSOR_PLATFORM_SCHEMA = cv.Schema({
     cv.Optional(CONF_ALARM_LED): binary_sensor.binary_sensor_schema(),
 })
 
-CONFIG_SCHEMA = cv.All(DP_COMPONENT_SCHEMA, cv.COMPONENT_SCHEMA)
+CONFIG_SCHEMA = DP_COMPONENT_SCHEMA
 
 
 async def to_code(config):
-    # Initialize the main component
+    # Initialize the dp_component
     uart_component = await cg.get_variable(config[CONF_UART_ID])
     var = cg.new_Pvariable(config[CONF_ID], uart_component)
     await cg.register_component(var, config)
 
 
-@binary_sensor.PLATFORM_SCHEMA.extend(BINARY_SENSOR_PLATFORM_SCHEMA)
+@cg.register_component
+def register_binary_sensor_component():
+    return binary_sensor.register_platform(
+        platform_name="dp_component",
+        schema=BINARY_SENSOR_PLATFORM_SCHEMA,
+        async_to_code=to_code_binary_sensor,
+    )
+
+
 async def to_code_binary_sensor(config):
-    # Link binary sensors to the existing dp_component
+    # Link binary sensors to dp_component
     var = await cg.get_variable(config[CONF_ID])
 
     if CONF_COMPRESSOR in config:
