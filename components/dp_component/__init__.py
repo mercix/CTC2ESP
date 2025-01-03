@@ -5,11 +5,11 @@ from esphome.const import CONF_ID, CONF_UART_ID, CONF_NAME
 
 DEPENDENCIES = ["uart"]
 
-# Define the namespace for the custom component
+# Namespace and component definition
 dp_ns = cg.esphome_ns.namespace("dp_component")
 DpComponent = dp_ns.class_("DpComponent", cg.PollingComponent, uart.UARTDevice)
 
-# Define configuration keys
+# Configuration keys
 CONF_COMPRESSOR = "compressor"
 CONF_FAN_LOW = "fan_low"
 CONF_FAN_HIGH = "fan_high"
@@ -17,26 +17,38 @@ CONF_CIRCULATION_PUMP_HP = "circulation_pump_hp"
 CONF_SUPPLEMENTARY_HEATING = "supplementary_heating"
 CONF_ALARM_LED = "alarm_led"
 
-# Define the configuration schema
-CONFIG_SCHEMA = cv.Schema({
+# Main component schema
+DP_COMPONENT_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(DpComponent),
     cv.Required(CONF_UART_ID): cv.use_id(uart.UARTComponent),
+})
+
+# Binary sensor platform schema
+BINARY_SENSOR_PLATFORM_SCHEMA = cv.Schema({
+    cv.GenerateID(CONF_ID): cv.use_id(DpComponent),
     cv.Optional(CONF_COMPRESSOR): binary_sensor.binary_sensor_schema(),
     cv.Optional(CONF_FAN_LOW): binary_sensor.binary_sensor_schema(),
     cv.Optional(CONF_FAN_HIGH): binary_sensor.binary_sensor_schema(),
     cv.Optional(CONF_CIRCULATION_PUMP_HP): binary_sensor.binary_sensor_schema(),
     cv.Optional(CONF_SUPPLEMENTARY_HEATING): binary_sensor.binary_sensor_schema(),
     cv.Optional(CONF_ALARM_LED): binary_sensor.binary_sensor_schema(),
-}).extend(cv.COMPONENT_SCHEMA)
+})
 
-# Register the platform
+CONFIG_SCHEMA = cv.All(DP_COMPONENT_SCHEMA, cv.COMPONENT_SCHEMA)
+
+
 async def to_code(config):
-    # Create the custom component object
+    # Initialize the main component
     uart_component = await cg.get_variable(config[CONF_UART_ID])
     var = cg.new_Pvariable(config[CONF_ID], uart_component)
     await cg.register_component(var, config)
 
-    # Add sensors to the component
+
+@binary_sensor.PLATFORM_SCHEMA.extend(BINARY_SENSOR_PLATFORM_SCHEMA)
+async def to_code_binary_sensor(config):
+    # Link binary sensors to the existing dp_component
+    var = await cg.get_variable(config[CONF_ID])
+
     if CONF_COMPRESSOR in config:
         sens = await binary_sensor.new_binary_sensor(config[CONF_COMPRESSOR])
         cg.add(var.set_compressor(sens))
