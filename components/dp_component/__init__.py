@@ -9,7 +9,7 @@ DEPENDENCIES = ["uart"]
 dp_ns = cg.esphome_ns.namespace("dp_component")
 DpComponent = dp_ns.class_("DpComponent", cg.PollingComponent, uart.UARTDevice)
 
-# Define configuration options
+# Configuration keys
 CONF_COMPRESSOR = "compressor"
 CONF_FAN_LOW = "fan_low"
 CONF_FAN_HIGH = "fan_high"
@@ -17,7 +17,7 @@ CONF_CIRCULATION_PUMP_HP = "circulation_pump_hp"
 CONF_SUPPLEMENTARY_HEATING = "supplementary_heating"
 CONF_ALARM_LED = "alarm_led"
 
-# Component schema for `dp_component:`
+# Main dp_component schema
 DP_COMPONENT_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(DpComponent),
     cv.Required(CONF_UART_ID): cv.use_id(uart.UARTComponent),
@@ -42,15 +42,6 @@ async def to_code(config):
     uart_component = await cg.get_variable(config[CONF_UART_ID])
     var = cg.new_Pvariable(config[CONF_ID], uart_component)
     await cg.register_component(var, config)
-
-
-@cg.register_component
-def register_binary_sensor_component():
-    return binary_sensor.register_platform(
-        platform_name="dp_component",
-        schema=BINARY_SENSOR_PLATFORM_SCHEMA,
-        async_to_code=to_code_binary_sensor,
-    )
 
 
 async def to_code_binary_sensor(config):
