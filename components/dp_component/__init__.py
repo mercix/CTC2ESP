@@ -5,11 +5,11 @@ from esphome.const import CONF_ID, CONF_UART_ID, CONF_NAME
 
 DEPENDENCIES = ["uart"]
 
-# Define a namespace for your custom component
+# Define the namespace for the custom component
 dp_ns = cg.esphome_ns.namespace("dp_component")
 DpComponent = dp_ns.class_("DpComponent", cg.PollingComponent, uart.UARTDevice)
 
-# Define the binary sensor configuration keys
+# Define configuration keys
 CONF_COMPRESSOR = "compressor"
 CONF_FAN_LOW = "fan_low"
 CONF_FAN_HIGH = "fan_high"
@@ -17,7 +17,7 @@ CONF_CIRCULATION_PUMP_HP = "circulation_pump_hp"
 CONF_SUPPLEMENTARY_HEATING = "supplementary_heating"
 CONF_ALARM_LED = "alarm_led"
 
-# Configuration schema
+# Define the configuration schema
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(DpComponent),
     cv.Required(CONF_UART_ID): cv.use_id(uart.UARTComponent),
@@ -29,14 +29,14 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_ALARM_LED): binary_sensor.binary_sensor_schema(),
 }).extend(cv.COMPONENT_SCHEMA)
 
-
+# Register the platform
 async def to_code(config):
     # Create the custom component object
     uart_component = await cg.get_variable(config[CONF_UART_ID])
     var = cg.new_Pvariable(config[CONF_ID], uart_component)
     await cg.register_component(var, config)
 
-    # Register binary sensors with the component
+    # Add sensors to the component
     if CONF_COMPRESSOR in config:
         sens = await binary_sensor.new_binary_sensor(config[CONF_COMPRESSOR])
         cg.add(var.set_compressor(sens))
