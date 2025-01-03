@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import binary_sensor, uart
-from esphome.const import CONF_ID
+from esphome.const import CONF_ID, CONF_NAME
 
 DEPENDENCIES = ["uart"]
 
@@ -15,16 +15,18 @@ CONF_CIRCULATION_PUMP_HP = "circulation_pump_hp"
 CONF_SUPPLEMENTARY_HEATING = "supplementary_heating"
 CONF_ALARM_LED = "alarm_led"
 
-CONFIG_SCHEMA = cv.PLATFORM_SCHEMA.extend({
-    cv.GenerateID(): cv.declare_id(DpComponent),
-    cv.Required("uart_id"): cv.use_id(uart.UARTComponent),
-    cv.Optional(CONF_COMPRESSOR): binary_sensor.binary_sensor_schema(),
-    cv.Optional(CONF_FAN_LOW): binary_sensor.binary_sensor_schema(),
-    cv.Optional(CONF_FAN_HIGH): binary_sensor.binary_sensor_schema(),
-    cv.Optional(CONF_CIRCULATION_PUMP_HP): binary_sensor.binary_sensor_schema(),
-    cv.Optional(CONF_SUPPLEMENTARY_HEATING): binary_sensor.binary_sensor_schema(),
-    cv.Optional(CONF_ALARM_LED): binary_sensor.binary_sensor_schema(),
-}).extend(cv.COMPONENT_SCHEMA)
+CONFIG_SCHEMA = cv.nameable(
+    binary_sensor.BINARY_SENSOR_PLATFORM_SCHEMA.extend({
+        cv.GenerateID(): cv.declare_id(DpComponent),
+        cv.Required("uart_id"): cv.use_id(uart.UARTComponent),
+        cv.Optional(CONF_COMPRESSOR): binary_sensor.binary_sensor_schema(),
+        cv.Optional(CONF_FAN_LOW): binary_sensor.binary_sensor_schema(),
+        cv.Optional(CONF_FAN_HIGH): binary_sensor.binary_sensor_schema(),
+        cv.Optional(CONF_CIRCULATION_PUMP_HP): binary_sensor.binary_sensor_schema(),
+        cv.Optional(CONF_SUPPLEMENTARY_HEATING): binary_sensor.binary_sensor_schema(),
+        cv.Optional(CONF_ALARM_LED): binary_sensor.binary_sensor_schema(),
+    }).extend(cv.COMPONENT_SCHEMA)
+)
 
 
 async def to_code(config):
