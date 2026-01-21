@@ -29,6 +29,7 @@ api:
     key: !secret api_key
 
 ota:
+  platform: esphome
 
 uart:
   - id: uart_bus_dp
@@ -98,4 +99,5 @@ sensor:
         accuracy_decimals: 0
       - name: "Temperature After HP"
         unit_of_measurement: "°C"
+
         accuracy_decimals: 0
